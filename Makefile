@@ -78,6 +78,11 @@ $1:
 	@cd $(BUILD_DIR)/$1 && zip -r ../$1.zip . && cd -
 	@mv $(BUILD_DIR)/$1.zip $(OUT_DIR)/
 	@cd $(SRCDIR) &&  $(RESET_DEFINES)
+
+	@echo ""
+	@echo "Build for $$(BOARD_DISPLAY_$1) completed:"
+	@echo "  $(OUT_DIR)/$1.zip"
+	@echo "  $(OUT_DIR)/$$(BOARD_OUT_$1)"
 endef
 
 $(eval $(call BUILD_BOARD,esp32-cam))
