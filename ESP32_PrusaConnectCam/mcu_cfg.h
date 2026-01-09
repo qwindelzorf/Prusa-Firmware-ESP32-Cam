@@ -52,8 +52,8 @@
 #define TASK_SDCARD_FILE_REMOVE     30000                   ///< sd card file remove task interval [ms]
 
 /* --------------- WEB SERVER CFG  --------------*/
-#define WEB_SERVER_PORT             80                      ///< WEB server port 
-#define SERIAL_PORT_SPEED           115200                  ///< baud rate 
+#define WEB_SERVER_PORT             80                      ///< WEB server port
+#define SERIAL_PORT_SPEED           115200                  ///< baud rate
 #define WDG_TIMEOUT                 40000                   ///< wdg timeout [second]
 #define PHOTO_FRAGMENT_SIZE         2048                    ///< photo fragmentation size [bytes]
 #define LOOP_DELAY                  100                     ///< loop delay [ms]
@@ -62,10 +62,10 @@
 
 /* --------------- OTA UPDATE CFG  --------------*/
 #define OTA_UPDATE_API_SERVER       "api.github.com"        ///< OTA update server URL
-#define OTA_UPDATE_API_URL          F("/repos/prusa3d/Prusa-Firmware-ESP32-Cam/releases/latest")  ///< path to file with OTA update
+#define OTA_UPDATE_API_URL          F("/repos/qwindelzorf/Prusa-Firmware-ESP32-Cam/releases/latest")  ///< path to file with OTA update
 
 /* ---------- RESET CFG CONFIGURATION  ----------*/
-#define CFG_RESET_TIME_WAIT         10000                   ///< wait to 10 000 ms = 10s for reset cfg during grounded CFG_RESET_PIN 
+#define CFG_RESET_TIME_WAIT         10000                   ///< wait to 10 000 ms = 10s for reset cfg during grounded CFG_RESET_PIN
 #define CFG_RESET_LOOP_DELAY        100                     ///< delay in the loop for reset cfg
 
 /* ---------------- MicroSD Logs ----------------*/
@@ -128,7 +128,7 @@
 #define FACTORY_CFG_RAW_GAMA                  1                 ///< raw gama
 #define FACTORY_CFG_WEB_AUTH_USERNAME         F("admin")        ///< user name for login to WEB interface. definition WEB_ENABLE_BASIC_AUTH must be true
 #define FACTORY_CFG_WEB_AUTH_PASSWORD         F("admin")        ///< password for login to WEB interface. definition WEB_ENABLE_BASIC_AUTH must be true
-#define FACTORY_CFG_WEB_AUTH_ENABLE           false             ///< enable web auth for login to WEB interface. definition WEB_ENABLE_BASIC_AUTH must be 
+#define FACTORY_CFG_WEB_AUTH_ENABLE           false             ///< enable web auth for login to WEB interface. definition WEB_ENABLE_BASIC_AUTH must be
 #define FACTORY_CFG_CAMERA_FLASH_ENABLE       false             ///< enable camera flash functionality
 #define FACTORY_CFG_CAMERA_FLASH_TIME         200               ///< time for camera flash duration time [ms]
 #define FACTORY_CFG_MDNS_RECORD_HOST          F("prusa-esp32cam") ///< mdns record http://MDNS_RECORD_HOST.local
@@ -167,7 +167,7 @@
 #define EEPROM_ADDR_TOKEN_LENGTH                  40                                                                            ///< how long is fingerprint [bytes]
 
 #define EEPROM_ADDR_FRAMESIZE_START               (EEPROM_ADDR_TOKEN_START + EEPROM_ADDR_TOKEN_LENGTH)                          ///< where is stored token
-#define EEPROM_ADDR_FRAMESIZE_LENGTH              1                                                                             ///< how long is token 
+#define EEPROM_ADDR_FRAMESIZE_LENGTH              1                                                                             ///< how long is token
 
 #define EEPROM_ADDR_BRIGHTNESS_START              (EEPROM_ADDR_FRAMESIZE_START + EEPROM_ADDR_FRAMESIZE_LENGTH)                  ///< where is stored framesize
 #define EEPROM_ADDR_BRIGHTNESS_LENGTH             1                                                                             ///< how long is framesize
@@ -196,13 +196,13 @@
 #define EEPROM_ADDR_WIFI_SSID_START               (EEPROM_ADDR_PHOTO_QUALITY_START + EEPROM_ADDR_PHOTO_QUALITY_LENGTH)          ///< where is stored wi-fi ssid
 #define EEPROM_ADDR_WIFI_SSID_LENGTH              33                                                                            ///< maximum length for IEEE 802.11 is 32 + 1 for save ssid length
 
-#define EEPROM_ADDR_WIFI_PASSWORD_START           (EEPROM_ADDR_WIFI_SSID_START + EEPROM_ADDR_WIFI_SSID_LENGTH)                  ///< where is stored wifi password 
+#define EEPROM_ADDR_WIFI_PASSWORD_START           (EEPROM_ADDR_WIFI_SSID_START + EEPROM_ADDR_WIFI_SSID_LENGTH)                  ///< where is stored wifi password
 #define EEPROM_ADDR_WIFI_PASSWORD_LENGTH          64                                                                            ///< maximum length for IEEE 802.11 is 63 + 1 for save password length
 
 #define EEPROM_ADDR_WIFI_ACTIVE_FLAG_START        (EEPROM_ADDR_WIFI_PASSWORD_START + EEPROM_ADDR_WIFI_PASSWORD_LENGTH)          ///< where is stored information about stored cfg
 #define EEPROM_ADDR_WIFI_ACTIVE_FLAG_LENGTH       1                                                                             ///< maximum lenght for cfg flag
 
-#define EEPROM_ADDR_BASIC_AUTH_USERNAME_START     (EEPROM_ADDR_WIFI_ACTIVE_FLAG_START + EEPROM_ADDR_WIFI_ACTIVE_FLAG_LENGTH)    ///< where is stored username for login with basic auth. 
+#define EEPROM_ADDR_BASIC_AUTH_USERNAME_START     (EEPROM_ADDR_WIFI_ACTIVE_FLAG_START + EEPROM_ADDR_WIFI_ACTIVE_FLAG_LENGTH)    ///< where is stored username for login with basic auth.
 #define EEPROM_ADDR_BASIC_AUTH_USERNAME_LENGTH    11                                                                            ///< maximum length for username is 10 byte + 1 byte for save length
 
 #define EEPROM_ADDR_BASIC_AUTH_PASSWORD_START     (EEPROM_ADDR_BASIC_AUTH_USERNAME_START + EEPROM_ADDR_BASIC_AUTH_USERNAME_LENGTH)        ///< where is stored password for login with basic auth
@@ -247,7 +247,7 @@
 #define EEPROM_ADDR_AE_LEVEL_START                (EEPROM_ADDR_AEC2_START + EEPROM_ADDR_AEC2_LENGTH)
 #define EEPROM_ADDR_AE_LEVEL_LENGTH               1
 
-#define EEPROM_ADDR_AEC_VALUE_START               (EEPROM_ADDR_AE_LEVEL_START + EEPROM_ADDR_AE_LEVEL_LENGTH)   
+#define EEPROM_ADDR_AEC_VALUE_START               (EEPROM_ADDR_AE_LEVEL_START + EEPROM_ADDR_AE_LEVEL_LENGTH)
 #define EEPROM_ADDR_AEC_VALUE_LENGTH              2
 
 #define EEPROM_ADDR_GAIN_CTRL_START               (EEPROM_ADDR_AEC_VALUE_START + EEPROM_ADDR_AEC_VALUE_LENGTH)
