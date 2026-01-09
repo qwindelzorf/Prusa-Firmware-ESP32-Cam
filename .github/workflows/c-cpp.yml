@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target-board: ["esp32-cam", "esp32-wrover-dev", "esp32-s3-eye-22", "xiao-esp32-s3", "esp32-s3-cam", "esp32-s3-wroom-freenove"]
     steps:
     - name: Setup Arduino CLI
       uses: arduino/setup-arduino-cli@v2
@@ -16,5 +19,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Install Dependencies
       run: make prereqs
-    - name: build
-      run: make
+    - name: Update Certs
+      run: make certs
+    - name: Build firmware
+      run: make ${{ matrix.target-board }}
