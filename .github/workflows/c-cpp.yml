@@ -10,6 +10,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: make
+    - name: Setup Arduino CLI
+      uses: arduino/setup-arduino-cli@v2
+    - name: Checkout Code
+      uses: actions/checkout@v4
+    - name: Install Dependencies
+      run: make prereqs
+    - name: build
       run: make
