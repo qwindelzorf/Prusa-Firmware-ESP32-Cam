@@ -1,17 +1,34 @@
 # PrusaConnect ESP32-CAM
 
+## Quickstart
+
+Configure your system
+
+```
+make clean
+make prereqs
+make certs
+```
+
+Build your board's firmware: `make <board>`
+or just build everything: `make all`
+
+Once that's done, update your board with the built firmware (see board specific `README.md`)
+
+## Setup
+
 This repository includes source code and firmware releases for the **ESP32-cam** module programmed in the **Arduino IDE**. Currently, several versions of boards built on **ESP32/ESP32S3** processors with a camera chip are supported. You can find a list of supported boards below. Additionally, for each supported board, there is a guide on how to upload the firmware, how to compile code for it, some basic information and a list of known issues for this particular board.
 
 This project uses other libraries. It is necessary to install them in the Arduino IDE:
 - App [Arduino IDE 2.3.4](https://www.arduino.cc/en/software)
 - MCU support [arduino-ESP32 3.1.0](https://github.com/espressif/arduino-esp32)
-- ~~Library [ESPAsyncWebSrv 1.2.7](https://github.com/dvarrel/ESPAsyncWebSrv)~~ To version **1.0.3-rc1**
-- ~~Library [AsyncTCP 1.1.4](https://github.com/dvarrel/AsyncTCP)~~ To version **1.0.3-rc1**
 - Library [AsyncTCP 3.3.1](https://github.com/mathieucarbou/AsyncTCP)
-- Library [ESPAsyncWebServer 3.4.5](https://github.com/mathieucarbou/ESPAsyncWebServer) 
+- Library [ESPAsyncWebServer 3.4.5](https://github.com/mathieucarbou/ESPAsyncWebServer)
 - Library [ArduinoJson 7.3.0](https://github.com/bblanchon/ArduinoJson)
 - Library [UniqueID 1.3.0](https://github.com/ricaun/ArduinoUniqueID)
 - Library [DHTnew 0.5.2](https://github.com/RobTillaart/DHTNew)
+
+These can be installed via the command `make prereqs`
 
 What we need for functionality:
 - Supported versions of boards built on **ESP32/ESP32-S3** processors with a camera [here](#supported_boards)
@@ -79,7 +96,7 @@ As a first step we need to install support for **ESP32 boards**.
 
 then go to **Tools** -> **Board** -> **Boards Manager...** and install module **ESP32** by **Espressif Systems**.
 
-The next step is to install the necessary libraries. Go to **Sketch** -> **Include Library** -> **Manage Libraries...** or you can use **Ctrl+Shift+I**. Here you can search for the necessary libraries and install them. 
+The next step is to install the necessary libraries. Go to **Sketch** -> **Include Library** -> **Manage Libraries...** or you can use **Ctrl+Shift+I**. Here you can search for the necessary libraries and install them.
 
 For the installation of the **ESPAsyncWebServer** and **AsyncTCP** libraries, it is necessary to download the **ZIP** archive from the official **GIT** repository, and then import it using **Sketch** -> **Include Library** -> **Add .ZIP Library ...**.
 
@@ -208,7 +225,7 @@ Commands for configuration have a simple syntax:
 
 |   command    | separator | variable  | termination | line terminator          |
 |--------------|-----------|-----------|-------------|--------------------------|
-| setwifissid  |     :     |   SSID    |     ;       | \n or \r or \n\r or \r\n | 
+| setwifissid  |     :     |   SSID    |     ;       | \n or \r or \n\r or \r\n |
 
 Currently, available commands are listed in the table below:
 
@@ -259,7 +276,7 @@ The camera offers a web API, allowing several operations to be performed through
 | http://IP/get_hum         | Get humidity from external sensor                |
 
 <a name="stream"></a>
-## Video stream 
+## Video stream
 
 The video stream is available at **http://IP/stream.mjpg**.
 
@@ -275,7 +292,7 @@ First, it is necessary to hold the camera with a holder and then put the wrench 
 **WARNING! Manual focusing can permanently damage the camera module!**
 
 <a name="ext_temp"></a>
-## External temperature sensor 
+## External temperature sensor
 
 The software supports an external temperature sensor **DHT22** or **DHT11**. The sensor needs to be connected according to the manual for the specific version of the board. The temperature and humidity are automatically read every 30 seconds once the sensor has been enabled.
 
