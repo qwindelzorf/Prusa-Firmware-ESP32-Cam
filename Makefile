@@ -12,17 +12,15 @@ prereqs:
 	@if [ -z "$(ARDUINO_CLI)" ]; then echo "arduino-cli not found. Please install arduino-cli and ensure it's on PATH."; exit 1; fi
 
 	$(ARDUINO_CLI) lib update-index
-	$(ARDUINO_CLI) lib install ArduinoJson
-	$(ARDUINO_CLI) lib install ArduinoUniqueID
-	$(ARDUINO_CLI) lib install DHTNEW
-	$(ARDUINO_CLI) lib install "Async TCP"@3.1.4
-	$(ARDUINO_CLI) lib install "ESP Async WebServer"@2.10.8
-	$(ARDUINO_CLI) lib upgrade
+	$(ARDUINO_CLI) lib install ArduinoJson@7.3.0
+	$(ARDUINO_CLI) lib install ArduinoUniqueID@1.3.0
+	$(ARDUINO_CLI) lib install DHTNEW@0.5.2
+	$(ARDUINO_CLI) lib install "Async TCP"@3.3.1
+	$(ARDUINO_CLI) lib install "ESP Async WebServer"@3.4.5
 	$(ARDUINO_CLI) lib list
 
 	$(ARDUINO_CLI) core update-index
-	$(ARDUINO_CLI) core install esp32:esp32
-	$(ARDUINO_CLI) core upgrade
+	$(ARDUINO_CLI) core install esp32:esp32@3.1.0
 	$(ARDUINO_CLI) core list
 
 clean:
