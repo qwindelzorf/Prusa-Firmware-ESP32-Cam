@@ -103,29 +103,49 @@
 # ---------------------------------------------
 set -e
 
-if [ -d "build" ]; then
-   rm -rf build
-fi
+ARD_CLI_PATH=`which arduino-cli`
 
 cd ESP32_PrusaConnectCam
-if [ ! -f arduino-cli ]; then
+if [ ! -f ${ARD_CLI_PATH} ]; then
    echo "arduino-cli not found. Please download arduino-cli and place it in the same folder as this script."
    exit 1
+else
+   echo "Using arduino-cli at: ${ARD_CLI_PATH}"
 fi
 
 echo "----------------------------------------------"
 echo "Check updated libraries"
-./arduino-cli lib list
-./arduino-cli lib update-index
-./arduino-cli lib upgrade
-./arduino-cli lib list
+${ARD_CLI_PATH} lib list
+${ARD_CLI_PATH} lib update-index
+
+${ARD_CLI_PATH} lib install ArduinoJson
+${ARD_CLI_PATH} lib install ArduinoUniqueID
+${ARD_CLI_PATH} lib install DHTNEW
+${ARD_CLI_PATH} lib install "Async TCP"@3.1.4
+${ARD_CLI_PATH} lib install "ESP Async WebServer"@2.10.8
+
+${ARD_CLI_PATH} lib upgrade
+${ARD_CLI_PATH} lib list
 
 echo "----------------------------------------------"
 echo "Check updated cores"
-./arduino-cli core list
-./arduino-cli core update-index
-./arduino-cli core upgrade
-./arduino-cli core list
+${ARD_CLI_PATH} core list
+${ARD_CLI_PATH} core update-index
+
+${ARD_CLI_PATH} core install esp32:esp32
+
+${ARD_CLI_PATH} core upgrade
+${ARD_CLI_PATH} core list
+
+echo "----------------------------------------------"
+echo "Cleaning previous builds..."
+if [ -d "build" ]; then
+   rm -rf build
+fi
+
+
+echo "----------------------------------------------"
+echo "Starting build process..."
 
 mkdir -p ../build/output
 build_start=`date`
@@ -135,8 +155,8 @@ build_start=`date`
 echo "----------------------------------------------"
 echo "Building Ai Thinker board"
 mkdir -p ../build/esp32-cam
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define AI_THINKER_ESP32_CAM false/#define AI_THINKER_ESP32_CAM true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:esp32cam:CPUFreq=240,FlashFreq=80,FlashMode=dio,PartitionScheme=min_spiffs,DebugLevel=none,EraseFlash=none  --output-dir ../build/esp32-cam
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(AI_THINKER_ESP32_CAM\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:esp32cam:CPUFreq=240,FlashFreq=80,FlashMode=dio,PartitionScheme=min_spiffs,DebugLevel=none,EraseFlash=none  --output-dir ../build/esp32-cam
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1
@@ -155,8 +175,8 @@ mv ../build/esp32-cam.zip ../build/output/
 echo "----------------------------------------------"
 echo "Building ESP32 Wrover Dev board"
 mkdir ../build/esp32-wrover-dev
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define ESP32_WROVER_DEV false/#define ESP32_WROVER_DEV true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:esp32wrover:FlashFreq=80,FlashMode=dio,PartitionScheme=min_spiffs,DebugLevel=none,EraseFlash=none --output-dir ../build/esp32-wrover-dev
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(ESP32_WROVER_DEV\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:esp32wrover:FlashFreq=80,FlashMode=dio,PartitionScheme=min_spiffs,DebugLevel=none,EraseFlash=none --output-dir ../build/esp32-wrover-dev
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1
@@ -175,8 +195,8 @@ mv ../build/esp32-wrover-dev.zip ../build/output/
 echo "----------------------------------------------"
 echo "Building ESP32-S3-EYE 2.2 board"
 mkdir ../build/esp32-s3-eye-22
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define CAMERA_MODEL_ESP32_S3_EYE_2_2 false/#define CAMERA_MODEL_ESP32_S3_EYE_2_2 true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=cdc,CPUFreq=240,FlashMode=dio,FlashSize=8M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-eye-22
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(CAMERA_MODEL_ESP32_S3_EYE_2_2\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=cdc,MSCOnBoot=default,DFUOnBoot=default,UploadMode=cdc,CPUFreq=240,FlashMode=dio,FlashSize=8M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-eye-22
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1
@@ -195,8 +215,8 @@ mv ../build/esp32-s3-eye-22.zip ../build/output/
 echo "----------------------------------------------"
 echo "Building XIAO ESP32-S3 Sense"
 mkdir ../build/xiao-esp32-s3
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define CAMERA_MODEL_XIAO_ESP32_S3_CAM false/#define CAMERA_MODEL_XIAO_ESP32_S3_CAM true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:XIAO_ESP32S3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=160,FlashMode=qio,FlashSize=8M,PartitionScheme=default_8MB,DebugLevel=none,PSRAM=opi,LoopCore=1,EventsCore=1,EraseFlash=none,JTAGAdapter=default --output-dir ../build/xiao-esp32-s3
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(CAMERA_MODEL_XIAO_ESP32_S3_CAM\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:XIAO_ESP32S3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=160,FlashMode=qio,FlashSize=8M,PartitionScheme=default_8MB,DebugLevel=none,PSRAM=opi,LoopCore=1,EventsCore=1,EraseFlash=none,JTAGAdapter=default --output-dir ../build/xiao-esp32-s3
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1
@@ -215,8 +235,8 @@ mv ../build/xiao-esp32-s3.zip ../build/output/
 echo "----------------------------------------------"
 echo "Building ESP32-S3-CAM"
 mkdir ../build/esp32-s3-cam
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define CAMERA_MODEL_ESP32_S3_CAM false/#define CAMERA_MODEL_ESP32_S3_CAM true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=240,FlashMode=dio,FlashSize=16M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-cam
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(CAMERA_MODEL_ESP32_S3_CAM\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=240,FlashMode=dio,FlashSize=16M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-cam
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1
@@ -235,8 +255,8 @@ mv ../build/esp32-s3-cam.zip ../build/output/
 echo "----------------------------------------------"
 echo "Building ESP32-S3 WROOM FREENOVE board"
 mkdir ../build/esp32-s3-wroom-freenove
-sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\) .*/#define \1 false/' mcu_cfg.h && sed -i 's/#define ESP32_S3_WROOM_FREENOVE false/#define ESP32_S3_WROOM_FREENOVE true/' mcu_cfg.h
-./arduino-cli compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=240,FlashMode=qio,FlashSize=8M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-wroom-freenove
+sed -i 's/#define \(AI_THINKER_ESP32_CAM\|ESP32_WROVER_DEV\|CAMERA_MODEL_ESP32_S3_DEV_CAM\|CAMERA_MODEL_ESP32_S3_EYE_2_2\|CAMERA_MODEL_XIAO_ESP32_S3_CAM\|CAMERA_MODEL_ESP32_S3_CAM\|ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\).*/#define \1\2false/' mcu_cfg.h && sed -i 's/#define \(ESP32_S3_WROOM_FREENOVE\)\([[:space:]]*\)false/#define \1\2true/' mcu_cfg.h
+${ARD_CLI_PATH} compile -v -b esp32:esp32:esp32s3:USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=240,FlashMode=qio,FlashSize=8M,PartitionScheme=min_spiffs,DebugLevel=none,PSRAM=opi,LoopCore=0,EventsCore=0,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default --output-dir ../build/esp32-s3-wroom-freenove
 if [ $? -ne 0 ]; then
    echo "Build failed, exiting."
    exit 1

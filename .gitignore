@@ -1,3 +1,6 @@
+build/
+.venv/
+
 # Created by https://www.toptal.com/developers/gitignore/api/c++,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,macos
 
@@ -41,7 +44,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
